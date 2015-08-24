@@ -12,11 +12,11 @@
 
 <style>
 .mytabmain {
-    width: 16.66% !important;  /* 12.5% for 8 tabs wide */
+    width: 100% !important;  /* 12.5% for 8 tabs wide */
     clear: 1 !important;  /* Prevent line break caused by ui-block-a */
 }
 .mytab {
-    width: 16.66% !important;  /* 12.5% for 8 tabs wide */
+    width: 20.00% !important;  /* 12.5% for 8 tabs wide */
     clear: none !important;  /* Prevent line break caused by ui-block-a */
 }
 
@@ -34,6 +34,37 @@ h3, h4
 	text-align: center;
 }
 
+#wrap 
+{
+   width:100%;
+   margin:0 auto;
+}
+
+.col_1_piscine
+{
+	float: left; width: 50%;
+	vertical-align:middle;
+}
+.col_2_piscine
+{
+	float: right; width: 50%;
+	vertical-align:middle;
+}
+
+.col_1
+{
+	float: left; width: 33.33%;
+}
+.col_2
+{ 
+	display: inline-block; width: 33.33%;
+}
+.col_3
+{
+	float: right; width: 33.33%;
+}
+
+<!--
 $(document).ready(function(){
     $("#accueil").click(function(){
         $("accueil").show();
@@ -42,6 +73,7 @@ $(document).ready(function(){
         $("p").show();
     });
 });
+-->
 
 </style>
 </style>
@@ -77,8 +109,6 @@ $(document).ready(function(){
 				});
 		}
 	);
-   
-
 </script>
 <!-- Simple JQuery Mobile page that display the button state on the breadoard -->
 <!-- You can also change the LED state with the slider switch -->
@@ -88,6 +118,7 @@ $(document).ready(function(){
 <div id="accueil" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Accueil</h1>
+		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Accueil content</p>
@@ -95,10 +126,11 @@ $(document).ready(function(){
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="#accueil" data-role="tab" data-icon="grid" class="ui-btn-active">Accueil</a></li>
-                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid" class="ui-btn-active">Accueil</a></li>
+                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
             </ul>
         </div>
     </div>
@@ -108,6 +140,7 @@ $(document).ready(function(){
 <div id="maison" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Maison</h1>
+		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Maison content</p>
@@ -115,10 +148,11 @@ $(document).ready(function(){
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li><a href="#maison" data-role="tab" data-icon="grid" class="ui-btn-active" ui-state-persist>Maison</a></li>
-                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid" class="ui-btn-active">Maison</a></li>
+                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
             </ul>
         </div>
     </div>
@@ -128,6 +162,7 @@ $(document).ready(function(){
 <div id="garage" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Garage</h1>
+		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Garage content</p>
@@ -135,10 +170,11 @@ $(document).ready(function(){
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li><a href="#garage" data-role="tab" data-icon="grid" class="ui-btn-active ui-state-persist">Garage</a></li>
-				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid" class="ui-btn-active">Garage</a></li>
+				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
             </ul>
         </div>
     </div>
@@ -148,23 +184,53 @@ $(document).ready(function(){
 <div id="piscine" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Piscine</h1>
+		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
+    </div>
+    <div data-role="content" id="wrap">
+		
+		<div class="col_1_piscine">
+			<p><b>Contrôle de la piscine</b></p>
+        	<form>
+		    	<label for="flip-poolpump">Pompe Piscine:</label>
+		    	<select name="flip-poolpump" id="flip-poolpump" data-role="slider" data-track-theme="b" data-theme="b">
+			        <option value="off">Off</option>
+			        <option value="on">On</option>
+		    	</select>
+			</form>
+			<form>
+		    	<label for="flip-thermopompe">Thermopompe Piscine:</label>
+		    	<select name="flip-thermopompe" id="flip-thermopompe" data-role="slider" data-track-theme="b" data-theme="b">
+		        	<option value="off">Off</option>
+		        	<option value="on">On</option>
+		    	</select>
+			</form>
+		</div>
+		<div class="col_2_piscine">
+			<p><b>Données de la piscine</b></p>
+
+		</div>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid" class="ui-btn-active">Piscine</a></li>
+				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--ÉTANG-->
+<div id="autres" data-role="page" data-theme="b">
+    <div data-role="header">
+        <h1>Autres</h1>
+		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
-        <p>Piscine content</p>
-		<form>
-		    <label for="flip-poolpump">Pompe Piscine:</label>
-		    <select name="flip-poolpump" id="flip-poolpump" data-role="slider" data-track-theme="b" data-theme="b">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-		</form>
-		<form>
-		    <label for="flip-thermopompe">Thermopompe Piscine:</label>
-		    <select name="flip-thermopompe" id="flip-thermopompe" data-role="slider" data-track-theme="b" data-theme="b">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-		</form>
+        <p>Autres content</p>
 		<form>
 		    <label for="flip-pondpump">Pompe Étang:</label>
 		    <select name="flip-pondpump" id="flip-pondpump" data-role="slider" data-track-theme="b" data-theme="b">
@@ -176,10 +242,11 @@ $(document).ready(function(){
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li><a href="#piscine" data-role="tab" data-icon="grid" class="ui-btn-active ui-state-persist">Piscine</a></li>
+                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid" class="ui-btn-active">Autres</a></li>
             </ul>
         </div>
     </div>
