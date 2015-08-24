@@ -1,86 +1,186 @@
-﻿<!doctype html>
+<!doctype html>
 <head>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-<meta charset="UTF-8">
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
-<style>
-.mytab {
-    width: 15% !important;  /* 12.5% for 8 tabs wide */
-    clear: none !important;  /* Prevent line break caused by ui-block-a */
-}
-</style>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
 </head>
 
-<body>
-	<h1 align="center">Domotique</h1>
-			<div data-role="tabs" id="tabs">
-			<!--TAB GENERATOR-->
-			<div data-role="navbar">
-				<ul data-role="" data-inset="true">
-					<li class="mytab"><a href="#Accueil" data-ajax="false">Accueil</a></li>
-					<li class="mytab"><a href="#Maison" data-ajax="false">Maison</a></li>
-					<li class="mytab"><a href="#Garage" data-ajax="false">Garage</a></li>
-					<li class="mytab"><a href="#Piscine" data-ajax="false">Piscine</a></li>
-					<li class="mytab"><a href="#Arrosage" data-ajax="false">Arrosage</a></li>
-					<li class="mytab"><a href="#Autres" data-ajax="false">Autres</a></li>
-				</ul>
-			</div>
-			
-			<!--TAB MAISON-->
-			<div id="Maison" class="ui-body-d ui-content">
-				<h2>Maison</h2>
-				<a href="#" class="ui-btn ui-btn-inline">Anchor</a>
-				<button class="ui-btn ui-btn-inline">Button</button>
-			</div>
+<style>
 
-			<!--TAB GARAGE-->
-			<div id="Garage" class="ui-body-d ui-content">
-				<h2>Garage</h2>
-				<ul data-role="listview" data-inset="true">
-					<li><a href="#">Acura</a></li>
-					<li><a href="#">Audi</a></li>
-					<li><a href="#">BMW</a></li>
-					<li><a href="#">Cadillac</a></li>
-					<li><a href="#">Ferrari</a></li>
-				</ul>
-			</div>
 
-			<!--TAB PISCINE-->
-			<div id="Piscine" class="ui-body-d ui-content">
-				<h2>Piscine</h2>
-				<form>
-				    <label for="flip-2">Pompe Piscine:</label>
-				    <select name="flip-2" id="flip-2" data-role="slider" data-track-theme="b" data-theme="b">
-				        <option value="off">Off</option>
-				        <option value="on">On</option>
-				    </select>
-				</form>
-				<form>
-				    <label for="flip-2">Thermopompe Piscine:</label>
-				    <select name="flip-2" id="flip-2" data-role="slider" data-track-theme="b" data-theme="b">
-				        <option value="off">Off</option>
-				        <option value="on">On</option>
-				    </select>
-				</form>
-			</div>
-			
-			<!--TAB ARROSAGE-->
-			<div id="Arrosage" class="ui-body-d ui-content">
-				<h2>Arrosage</h2>
-			</div>
 
-			<!--TAB AUTRES-->
-			<div id="Autres" class="ui-body-d ui-content">
-				<h2>Autres</h2>
-				<a href="#" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">Left</a>
-				<a href="#" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-right">Right</a>
-				<a href="#" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-top">Top</a>
-				<a href="#" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-bottom">Bottom</a>
-				<a href="#" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-notext">Icon only</a>
-			</div>
+<style>
+.mytabmain {
+    width: 16.66% !important;  /* 12.5% for 8 tabs wide */
+    clear: 1 !important;  /* Prevent line break caused by ui-block-a */
+}
+.mytab {
+    width: 16.66% !important;  /* 12.5% for 8 tabs wide */
+    clear: none !important;  /* Prevent line break caused by ui-block-a */
+}
 
-	</div>
-</body>
+h1 
+{
+	margin-top: 0px;
+	margin-bottom: 0px;
+    overflow: hidden;
+	text-align: center;
+	font-size:300%;
+}
+span {font-weight: bold;}
+h3, h4 
+{
+	text-align: center;
+}
+
+$(document).ready(function(){
+    $("#accueil").click(function(){
+        $("accueil").show();
+    });
+    $("#show").click(function(){
+        $("p").show();
+    });
+});
+
+</style>
+</style>
+
+<script type=text/javascript>
+    $(
+		// When the PoolPump button is pressed (change)
+		// do an ajax request to server to change PoolPump state
+		function PoolPump() 
+		{
+			$('#flip-poolpump').change(function() 
+			{
+				$.getJSON('/_poolpump', {state: $('#flip-poolpump').val()});
+			});
+			$.getJSON('/_poolpumpstatus', function(poolpumptext)
+			{
+				$('#flip-poolpump').val(poolpumptext.poolpumpState).slider('refresh');
+				setTimeout(function(){PoolPump();},500);
+			});
+		}
+	);
+
+	$(
+		// periodically (500ms) do an ajax request to get the button state
+		// modify the span tag to reflect the state (pressed or not)
+		// the state text comes from the JSON string returned by the server
+		function button() 
+		{
+			$.getJSON('/_button', function(data)
+				{
+					$("#buttonState").text(data.buttonState);
+					setTimeout(function(){button();},500);
+				});
+		}
+	);
+   
+
+</script>
+<!-- Simple JQuery Mobile page that display the button state on the breadoard -->
+<!-- You can also change the LED state with the slider switch -->
+<!-- The Raspberry Pi uptime is displayed in the footer (Jinja2 expands the template tag) -->
+
+<!--ACCUEIL-->
+<div id="accueil" data-role="page" data-theme="b">
+    <div data-role="header">
+        <h1>Accueil</h1>
+    </div>
+    <div data-role="content">
+        <p>Accueil content</p>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#accueil" data-role="tab" data-icon="grid" class="ui-btn-active">Accueil</a></li>
+                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--MAISON-->
+<div id="maison" data-role="page" data-theme="b">
+    <div data-role="header">
+        <h1>Maison</h1>
+    </div>
+    <div data-role="content">
+        <p>Maison content</p>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li><a href="#maison" data-role="tab" data-icon="grid" class="ui-btn-active" ui-state-persist>Maison</a></li>
+                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--GARAGE-->
+<div id="garage" data-role="page" data-theme="b">
+    <div data-role="header">
+        <h1>Garage</h1>
+    </div>
+    <div data-role="content">
+        <p>Garage content</p>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li><a href="#garage" data-role="tab" data-icon="grid" class="ui-btn-active ui-state-persist">Garage</a></li>
+				<li><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--PISCINE-->
+<div id="piscine" data-role="page" data-theme="b">
+    <div data-role="header">
+        <h1>Piscine</h1>
+    </div>
+    <div data-role="content">
+        <p>Piscine content</p>
+		<form>
+		    <label for="flip-poolpump">Pompe Piscine:</label>
+		    <select name="flip-poolpump" id="flip-poolpump" data-role="slider" data-track-theme="b" data-theme="b">
+		        <option value="off">Off</option>
+		        <option value="on">On</option>
+		    </select>
+		</form>
+		<form>
+		    <label for="flip-thermopompe">Thermopompe Piscine:</label>
+		    <select name="flip-thermopompe" id="flip-thermopompe" data-role="slider" data-track-theme="b" data-theme="b">
+		        <option value="off">Off</option>
+		        <option value="on">On</option>
+		    </select>
+		</form>
+		<form>
+		    <label for="flip-pondpump">Pompe Étang:</label>
+		    <select name="flip-pondpump" id="flip-pondpump" data-role="slider" data-track-theme="b" data-theme="b">
+		        <option value="off">Off</option>
+		        <option value="on">On</option>
+		    </select>
+		</form>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
+                <li><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
+                <li><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
+				<li><a href="#piscine" data-role="tab" data-icon="grid" class="ui-btn-active ui-state-persist">Piscine</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
