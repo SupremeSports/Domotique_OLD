@@ -88,10 +88,23 @@ $(document).ready(function(){
 			{
 				$.getJSON('/_poolpump', {state: $('#flip-poolpump').val()});
 			});
-			$.getJSON('/_poolpumpstatus', function(poolpumptext)
+			$.getJSON('/_poolpumpstatus', function(data)
 			{
-				$('#flip-poolpump').val(poolpumptext.poolpumpState).slider('refresh');
+				$('#flip-poolpump').val(data.poolpumpState).slider('refresh');
 				setTimeout(function(){PoolPump();},500);
+			});
+		}
+	);
+	
+	$(
+		// When the PoolPump button is pressed (change)
+		// do an ajax request to server to change PoolPump state
+		function TEDPowerNow() 
+		{
+			$.getJSON('/_tedpowernow', function(data)
+			{
+				$("#tedPowerNow").text(data.tedPowerState);
+				setTimeout(function(){TEDPowerNow();},1000);
 			});
 		}
 	);
@@ -122,6 +135,8 @@ $(document).ready(function(){
     </div>
     <div data-role="content">
         <p>Accueil content</p>
+		<span class="rightfloat">TED5000 Power Now:	<span id="tedPowerNow"></span>
+		</span>
     </div>
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
