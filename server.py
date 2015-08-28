@@ -13,13 +13,10 @@ import time
 app = Flask(__name__)
 ted = TED5000()
 
-# return index page when IP address of RPi is typed in the browser
 @app.route("/")
 def Index():
-    return render_template("index.html", uptime=GetUptime())
+    return render_template("index.html")
 
-# ajax GET call this function to set led state
-# depeding on the GET parameter sent
 @app.route("/_poolpump")
 def _poolpump():
     state = request.args.get('state')
@@ -28,7 +25,8 @@ def _poolpump():
     else:
         Pins.PoolPumpoff()
     return ""
-	
+
+@app.route("/_pondpump")	
 def _pondpump():
     state = request.args.get('state')
     if state=="on":
@@ -36,16 +34,6 @@ def _pondpump():
     else:
         Pins.LEDoff()
     return ""
-
-# ajax GET call this function periodically to read button state
-# the state is sent back as json data
-@app.route("/_button")
-def _button():
-    if Pins.ReadButton():
-        state = "pressed"
-    else:
-        state = "not pressed"
-    return jsonify(buttonState=state)
 
 @app.route("/_poolpumpstatus")
 def _poolpumpstatus():
@@ -66,20 +54,9 @@ def _tednow():
 	costnow = "%0.2f" % costnow
 	costtdy = ted.get("Cost","Total","CostTDY")/100
 	costtdy = "%0.2f" % costtdy
-	
 	Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
-	
 	return jsonify(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
-	
-def GetUptime():
-    # get uptime from the linux terminal command
-    from subprocess import check_output
-    output = check_output(["uptime"])
-    # return only uptime info
-    uptime = output[output.find("up"):output.find("user")-5]
-    return uptime
-	
-    
+
 # run the webserver on port 8083, requires sudo
 if __name__ == "__main__":
     Pins.Init()

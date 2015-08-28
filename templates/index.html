@@ -4,10 +4,6 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
-</head>
-
-<style>
-
 
 
 <style>
@@ -79,19 +75,9 @@ h3, h4
 	float: right; width: 33.33%;
 }
 
-<!--
-$(document).ready(function(){
-    $("#accueil").click(function(){
-        $("accueil").show();
-    });
-    $("#show").click(function(){
-        $("p").show();
-    });
-});
--->
+</style>
 
-</style>
-</style>
+</head>
 
 <script type=text/javascript>
     $(
@@ -126,25 +112,7 @@ $(document).ready(function(){
 			});
 		}
 	);
-	
-		$(
-		// periodically (500ms) do an ajax request to get the button state
-		// modify the span tag to reflect the state (pressed or not)
-		// the state text comes from the JSON string returned by the server
-		function button() 
-		{
-			$.getJSON('/_button', function(data)
-				{
-					$("#buttonState").text(data.buttonState);
-					setTimeout(function(){button();},500);
-				});
-		}
-	);
-
 </script>
-<!-- Simple JQuery Mobile page that display the button state on the breadoard -->
-<!-- You can also change the LED state with the slider switch -->
-<!-- The Raspberry Pi uptime is displayed in the footer (Jinja2 expands the template tag) -->
 
 <!--ACCUEIL-->
 <div id="accueil" data-role="page" data-theme="b">
