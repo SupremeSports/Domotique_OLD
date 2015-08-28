@@ -28,10 +28,25 @@ h1
 	text-align: center;
 	font-size:300%;
 }
-span {font-weight: bold;}
+span
+{
+	font-weight: bold;
+}
+
 h3, h4 
 {
 	text-align: center;
+}
+
+.tab 
+{
+    position: absolute;
+    left: 15em;
+}
+.tab 
+{
+    position: absolute;
+    left: 20em;
 }
 
 #wrap 
@@ -101,15 +116,18 @@ $(document).ready(function(){
 		// do an ajax request to server to change PoolPump state
 		function TEDPowerNow() 
 		{
-			$.getJSON('/_tedpowernow', function(data)
+			$.getJSON('/_tednow', function(data)
 			{
 				$("#tedPowerNow").text(data.tedPowerState);
+				$("#tedVoltageNow").text(data.tedVoltageState);
+				$("#tedCostNow").text(data.tedCostState);
+				$("#tedCostTDY").text(data.tedCosttdyState);
 				setTimeout(function(){TEDPowerNow();},1000);
 			});
 		}
 	);
-
-	$(
+	
+		$(
 		// periodically (500ms) do an ajax request to get the button state
 		// modify the span tag to reflect the state (pressed or not)
 		// the state text comes from the JSON string returned by the server
@@ -122,6 +140,7 @@ $(document).ready(function(){
 				});
 		}
 	);
+
 </script>
 <!-- Simple JQuery Mobile page that display the button state on the breadoard -->
 <!-- You can also change the LED state with the slider switch -->
@@ -135,8 +154,9 @@ $(document).ready(function(){
     </div>
     <div data-role="content">
         <p>Accueil content</p>
-		<span class="rightfloat">TED5000 Power Now:	<span id="tedPowerNow"></span>
-		</span>
+		<p><span class="rightfloat">TED5000 Power Now : <span id="tedPowerNow"></span><span> kW</span></p>
+		<p><span class="rightfloat">TED5000 Voltage Now : <span id="tedVoltageNow"></span><span> V</span></p>
+		<p><span class="rightfloat">TED5000 Cost Now : <span id="tedCostNow"></span><span> $/h </span><span id="tedCostTDY"></span><span> $</span></</p>
     </div>
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">

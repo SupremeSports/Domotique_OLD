@@ -28,7 +28,6 @@ import Image
 import ImageFont
 import ImageDraw
 
-
 # Raspberry Pi pin configuration:
 RST = 24
 # Note the following are only used with SPI:
@@ -79,16 +78,24 @@ draw = ImageDraw.Draw(image)
 
 # Load default font.
 #font = ImageFont.load_default()
-
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as this python script!
 # Some nice fonts to try: http://www.dafont.com/bitmap.php
 font = ImageFont.truetype('KeepCalm-Medium.ttf',10)
 
-# Define text and get total width.
-# Write two lines of text.
-draw.text((0, top),    "  Intel",  font=font, fill=255)
-draw.text((0, top+30), ' Edison', font=font, fill=255)
-
 # Display image.
 disp.image(image)
 disp.display()
+
+# Change display.
+def ChangeDisplay(PowerNow, VoltageNow, CostNow, CostTDY):
+	# Clear image buffer by drawing a black filled box.
+	draw.rectangle((0,0,width,height), outline=0, fill=0)
+	
+	draw.text((0, top+2),  'Power Now : '+PowerNow+' kW',  font=font, fill=255)
+	draw.text((0, top+17), 'Voltage Now : '+VoltageNow+' V', font=font, fill=255)
+	draw.text((0, top+32), 'Cost Now : '+CostNow+' $/h', font=font, fill=255)
+	draw.text((0, top+47), 'Cost TDY : '+CostTDY+' $', font=font, fill=255)
+	
+	# Redraw new image to display
+	disp.image(image)
+	disp.display()

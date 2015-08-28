@@ -14,7 +14,7 @@ class TED5000:
     def get(self, *tags):
         xpath = "./"+"/".join(tags)
         node = self.root.find(xpath)
-        return int(node.text)
+        return float(node.text)
 
 if __name__=="__main__":
     #Tests

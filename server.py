@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 from TED5000 import TED5000
+#from Display import Display
+
 import Pins
-#import Display
+import Display
+
 import json
 import os
 import RPi.GPIO as GPIO
@@ -52,11 +55,21 @@ def _poolpumpstatus():
         state = "on"
     return jsonify(poolpumpState=state)
 	
-@app.route("/_tedpowernow")
-def _tedpowernow():
+@app.route("/_tednow")
+def _tednow():
 	ted.reload()
-	power = ted.get("Power","Total","PowerNow")
-	return jsonify(tedPowerState=power)
+	powernow = ted.get("Power","Total","PowerNow")/1000
+	powernow = "%0.3f" % powernow
+	voltagenow = ted.get("Voltage","Total","VoltageNow")/10
+	voltagenow = "%0.1f" % voltagenow
+	costnow = ted.get("Cost","Total","CostNow")/100
+	costnow = "%0.2f" % costnow
+	costtdy = ted.get("Cost","Total","CostTDY")/100
+	costtdy = "%0.2f" % costtdy
+	
+	Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
+	
+	return jsonify(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
 	
 def GetUptime():
     # get uptime from the linux terminal command
@@ -65,6 +78,7 @@ def GetUptime():
     # return only uptime info
     uptime = output[output.find("up"):output.find("user")-5]
     return uptime
+	
     
 # run the webserver on port 8083, requires sudo
 if __name__ == "__main__":
