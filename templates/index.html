@@ -80,12 +80,12 @@ h3, h4
 </head>
 
 <script type=text/javascript>
-    $(
+	$(
 		// When the PoolPump button is pressed (change)
 		// do an ajax request to server to change PoolPump state
 		function PoolPump() 
 		{
-			$('#flip-poolpump').change(function() 
+			$('#flip-poolpump').change(function(data) 
 			{
 				$.getJSON('/_poolpump', {state: $('#flip-poolpump').val()});
 			});
@@ -96,7 +96,7 @@ h3, h4
 			});
 		}
 	);
-	
+	//setTimeout(function(){Refresh500ms();},500);
 	$(
 		// When the PoolPump button is pressed (change)
 		// do an ajax request to server to change PoolPump state
@@ -112,6 +112,7 @@ h3, h4
 			});
 		}
 	);
+	//setTimeout(function(){Refresh1000ms();},1000);
 </script>
 
 <!--ACCUEIL-->

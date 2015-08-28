@@ -24,7 +24,7 @@ def _poolpump():
         Pins.PoolPumpon()
     else:
         Pins.PoolPumpoff()
-    return ""
+    return jsonify(poolpumpState=state)
 
 @app.route("/_pondpump")	
 def _pondpump():
