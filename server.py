@@ -1,21 +1,24 @@
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Flask, render_template, request, jsonify
-from TED5000 import TED5000
+from flask.ext.socketio import SocketIO, emit
+from threading import Thread
 #from Display import Display
-
 import Pins
-import Display
-
-import json
-import os
-import RPi.GPIO as GPIO
 import time
+import sys
+
+
+try:
+    PORT = int(sys.argv[1])
+except:     
+    PORT = 8083
 
 app = Flask(__name__)
-ted = TED5000()
-
-@app.route("/")
-def Index():
-    return render_template("index.html")
+app.debug = True
+socketio = SocketIO(app)
+thread = None
 
 @app.route("/_poolpump")
 def _poolpump():
@@ -43,21 +46,58 @@ def _poolpumpstatus():
         state = "on"
     return jsonify(poolpumpState=state)
 	
-@app.route("/_tednow")
-def _tednow():
-	ted.reload()
-	powernow = ted.get("Power","Total","PowerNow")/1000
-	powernow = "%0.3f" % powernow
-	voltagenow = ted.get("Voltage","Total","VoltageNow")/10
-	voltagenow = "%0.1f" % voltagenow
-	costnow = ted.get("Cost","Total","CostNow")/100
-	costnow = "%0.2f" % costnow
-	costtdy = ted.get("Cost","Total","CostTDY")/100
-	costtdy = "%0.2f" % costtdy
-	Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
-	return jsonify(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
+def TED_thread():
+    from TED5000 import TED5000
+    ted = TED5000()
+    while True:
+        #time.sleep(1)
+        ted.reload()
+        powernow = ted.get("Power","Total","PowerNow")/1000
+        powernow = "%0.3f" % powernow
+        voltagenow = ted.get("Voltage","Total","VoltageNow")/10
+        voltagenow = "%0.1f" % voltagenow
+        costnow = ted.get("Cost","Total","CostNow")/100
+        costnow = "%0.2f" % costnow
+        costtdy = ted.get("Cost","Total","CostTDY")/100
+        costtdy = "%0.2f" % costtdy
+        #Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
+        data = dict(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
+        #print "dict="+str(data)
+        socketio.emit('TED', data)
 
-# run the webserver on port 8083, requires sudo
+@app.route('/')
+def index():
+    global thread
+    if thread is None:
+        thread = Thread(target=TED_thread)
+        thread.start()
+        
+    return render_template('index.html')
+
+@socketio.on('pond_pump')
+def pond_pump(data):
+    state = data["state"]
+    if state=="on":
+        Pins.PondPumpOn()
+    else:
+        Pins.PondPumpOff()
+
+@socketio.on('pool_pump')
+def pool_pump(data):
+    state = data["state"]
+    if state=="on":
+        Pins.PoolPumpOn()
+    else:
+        Pins.PoolPumpOff()
+    emit("pool_pump_status", {"state": state}, broadcast=True)
+
+@socketio.on('my broadcast event')
+def test_broadcast_message(message):
+    emit('my response',
+         {'data': message['data'], 'count': 10},
+         broadcast=True)
+    
+# run the webserver, requires sudo
 if __name__ == "__main__":
     Pins.Init()
-    app.run(host='0.0.0.0', port=8083, debug=True)
+    socketio.run(app, host="0.0.0.0", port=PORT)

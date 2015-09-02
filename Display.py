@@ -80,7 +80,7 @@ draw = ImageDraw.Draw(image)
 #font = ImageFont.load_default()
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as this python script!
 # Some nice fonts to try: http://www.dafont.com/bitmap.php
-font = ImageFont.truetype('KeepCalm-Medium.ttf',10)
+font = ImageFont.truetype('fonts/KeepCalm-Medium.ttf',10)
 
 # Display image.
 disp.image(image)

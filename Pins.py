@@ -12,10 +12,10 @@ def Init():
     # also use internal pull-up so we don't need external resistor
     GPIO.setup(P1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-def PoolPumpon():
+def PoolPumpOn():
     GPIO.output(PoolPumpOut, GPIO.HIGH)
 
-def PoolPumpoff():
+def PoolPumpOff():
     GPIO.output(PoolPumpOut, GPIO.LOW)
 
 def SetLED(state):
