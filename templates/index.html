@@ -28,15 +28,33 @@ $(document).ready(function()
         $("#tedCostNow").text(data.tedCostState);
         $("#tedCostTDY").text(data.tedCosttdyState);
     });
+	
+//-------------------------------------------------------------------------
+// Refresh actions
+//-------------------------------------------------------------------------	
 
     socket.on('pool_pump_status', function(data)
     {   
         $('#flip-poolpump').val(data.state).slider('refresh');
     });
+	
+	socket.on('pond_pump_status', function(data)
+    {   
+        $('#flip-pondpump').val(data.state).slider('refresh');
+    });
+	
+//-------------------------------------------------------------------------
+// Buttons actions
+//-------------------------------------------------------------------------
 
     $('#flip-poolpump').change( function(data)
     {
         socket.emit('pool_pump', {state: $('#flip-poolpump').val()});
+    });
+	
+	$('#flip-pondpump').change( function(data)
+    {
+        socket.emit('pond_pump', {state: $('#flip-pondpump').val()});
     });
 
 });
@@ -46,7 +64,6 @@ $(document).ready(function()
 <div id="accueil" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Accueil</h1>
-		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Accueil content</p>
@@ -72,7 +89,6 @@ $(document).ready(function()
 <div id="maison" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Maison</h1>
-		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Maison content</p>
@@ -94,7 +110,6 @@ $(document).ready(function()
 <div id="garage" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Garage</h1>
-		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Garage content</p>
@@ -116,7 +131,6 @@ $(document).ready(function()
 <div id="piscine" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Piscine</h1>
-		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content" id="wrap">
 		
@@ -159,7 +173,6 @@ $(document).ready(function()
 <div id="autres" data-role="page" data-theme="b">
     <div data-role="header">
         <h1>Autres</h1>
-		<a href="#" data-icon="refresh" class="ui-btn-right" data-iconpos="right" onClick="history.go(0)">Refresh</a>
     </div>
     <div data-role="content">
         <p>Autres content</p>

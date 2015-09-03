@@ -4,7 +4,7 @@ monkey.patch_all()
 from flask import Flask, render_template, request, jsonify
 from flask.ext.socketio import SocketIO, emit
 from threading import Thread
-#from Display import Display
+import Display
 import Pins
 import time
 import sys
@@ -18,7 +18,7 @@ except:
 app = Flask(__name__)
 app.debug = True
 socketio = SocketIO(app)
-thread = None
+thread_TED = None
 
 @app.route("/_poolpump")
 def _poolpump():
@@ -60,27 +60,19 @@ def TED_thread():
         costnow = "%0.2f" % costnow
         costtdy = ted.get("Cost","Total","CostTDY")/100
         costtdy = "%0.2f" % costtdy
-        #Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
+        Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
         data = dict(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
         #print "dict="+str(data)
         socketio.emit('TED', data)
 
 @app.route('/')
 def index():
-    global thread
-    if thread is None:
-        thread = Thread(target=TED_thread)
-        thread.start()
+    global thread_TED
+    if thread_TED is None:
+        thread_TED = Thread(target=TED_thread)
+        thread_TED.start()
         
     return render_template('index.html')
-
-@socketio.on('pond_pump')
-def pond_pump(data):
-    state = data["state"]
-    if state=="on":
-        Pins.PondPumpOn()
-    else:
-        Pins.PondPumpOff()
 
 @socketio.on('pool_pump')
 def pool_pump(data):
@@ -90,6 +82,15 @@ def pool_pump(data):
     else:
         Pins.PoolPumpOff()
     emit("pool_pump_status", {"state": state}, broadcast=True)
+	
+@socketio.on('pond_pump')
+def pond_pump(data):
+    state = data["state"]
+    if state=="on":
+        Pins.PondPumpOn()
+    else:
+        Pins.PondPumpOff()
+	emit("pond_pump_status", {"state": state}, broadcast=True)
 
 @socketio.on('my broadcast event')
 def test_broadcast_message(message):
