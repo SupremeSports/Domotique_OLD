@@ -19,6 +19,7 @@ app = Flask(__name__)
 app.debug = True
 socketio = SocketIO(app)
 thread_TED = None
+thread_DAE = None
 
 @app.route("/_poolpump")
 def _poolpump():
@@ -64,6 +65,17 @@ def TED_thread():
         data = dict(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
         #print "dict="+str(data)
         socketio.emit('TED', data)
+		
+def DAE_thread():
+	from DAENetIP4 import DAENetIP4
+	dae = DAENetIP4()
+	while True:
+		dae.reload()
+		pooltemp = dae.get("AnalogInput4","Value")/7.64
+		pooltemp = "%0.1f" % pooltemp
+		data = dict(daePoolTempState=pooltemp)
+		#print "dict="+str(data)
+		socketio.emit('DAE', data)
 
 @app.route('/')
 def index():
@@ -71,6 +83,10 @@ def index():
     if thread_TED is None:
         thread_TED = Thread(target=TED_thread)
         thread_TED.start()
+	global thread_DAE
+    if thread_DAE is None:
+        thread_DAE = Thread(target=DAE_thread)
+        thread_DAE.start()
         
     return render_template('index.html')
 
