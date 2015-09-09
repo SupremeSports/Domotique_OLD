@@ -3,8 +3,9 @@ monkey.patch_all()
 
 from flask import Flask, render_template, request, jsonify
 from flask.ext.socketio import SocketIO, emit
+from XML import SimpleParser
 from threading import Thread
-import Display
+#import Display
 import Pins
 import time
 import sys
@@ -48,8 +49,7 @@ def _poolpumpstatus():
     return jsonify(poolpumpState=state)
 	
 def TED_thread():
-    from TED5000 import TED5000
-    ted = TED5000()
+    ted = SimpleParser()
     while True:
         #time.sleep(1)
         ted.reload()
@@ -61,14 +61,13 @@ def TED_thread():
         costnow = "%0.2f" % costnow
         costtdy = ted.get("Cost","Total","CostTDY")/100
         costtdy = "%0.2f" % costtdy
-        Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
+ #       Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
         data = dict(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
         #print "dict="+str(data)
         socketio.emit('TED', data)
 		
 def DAE_thread():
-	from DAENetIP4 import DAENetIP4
-	dae = DAENetIP4()
+	dae = SimpleParser(url="http://supremesports.ddns.net:8082/current_state.xml?pw=abcd1234")
 	while True:
 		dae.reload()
 		pooltemp = dae.get("AnalogInput4","Value")/7.64
