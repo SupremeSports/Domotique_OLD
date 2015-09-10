@@ -33,35 +33,16 @@ $(document).ready(function()
     {
         $("#daePoolTemp").text(data.daePoolTempState);
     });
-	
-//-------------------------------------------------------------------------
-// Refresh actions
-//-------------------------------------------------------------------------	
 
-    socket.on('pool_pump_status', function(data)
-    {   
-        $('#flip-poolpump').val(data.state).slider('refresh');
-    });
-	
-	socket.on('pond_pump_status', function(data)
-    {   
-        $('#flip-pondpump').val(data.state).slider('refresh');
-    });
-	
-//-------------------------------------------------------------------------
-// Buttons actions
-//-------------------------------------------------------------------------
+    // Refresh actions
+    {% for button in buttons %}
+    {{ button.update|safe }}
+    {% endfor %}
 
-    $('#flip-poolpump').change( function(data)
-    {
-        socket.emit('pool_pump', {state: $('#flip-poolpump').val()});
-    });
-	
-	$('#flip-pondpump').change( function(data)
-    {
-        socket.emit('pond_pump', {state: $('#flip-pondpump').val()});
-    });
-
+    // Buttons actions
+    {% for button in buttons %}
+    {{ button.send|safe }}
+    {% endfor %}
 });
 </script>
 
@@ -77,17 +58,7 @@ $(document).ready(function()
 		<p><span class="rightfloat">TED5000 Voltage Now : <span id="tedVoltageNow"></span><span> V</span></p>
 		<p><span class="rightfloat">TED5000 Cost Now : <span id="tedCostNow"></span><span> $/h </span><span id="tedCostTDY"></span><span> $</span></</p>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid" class="ui-btn-active">Accueil</a></li>
-                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
-				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
-            </ul>
-        </div>
-    </div>
+    {{footer|safe}}
 </div>
 
 <!--MAISON-->
@@ -98,17 +69,7 @@ $(document).ready(function()
     <div data-role="content">
         <p>Maison content</p>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid" class="ui-btn-active">Maison</a></li>
-                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
-				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
-            </ul>
-        </div>
-    </div>
+    {{footer|safe}}
 </div>
 
 <!--GARAGE-->
@@ -119,17 +80,7 @@ $(document).ready(function()
     <div data-role="content">
         <p>Garage content</p>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid" class="ui-btn-active">Garage</a></li>
-				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
-				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
-            </ul>
-        </div>
-    </div>
+    {{footer|safe}}
 </div>
 
 <!--PISCINE-->
@@ -137,41 +88,20 @@ $(document).ready(function()
     <div data-role="header">
         <h1>Piscine</h1>
     </div>
-    <div data-role="content" id="wrap">
-		
-		<div class="col_1_piscine">
+   
+     <div data-role="content" id="wrap">
+	    <div class="col_1_piscine">
 			<p><b>Contrôle de la piscine</b></p>
-        	<form>
-		    	<label for="flip-poolpump">Pompe Piscine:</label>
-		    	<select name="flip-poolpump" id="flip-poolpump" data-role="slider" data-track-theme="b" data-theme="b">
-			        <option value="off">Off</option>
-			        <option value="on">On</option>
-		    	</select>
-			</form>
-			<form>
-		    	<label for="flip-thermopompe">Thermopompe Piscine:</label>
-		    	<select name="flip-thermopompe" id="flip-thermopompe" data-role="slider" data-track-theme="b" data-theme="b">
-		        	<option value="off">Off</option>
-		        	<option value="on">On</option>
-		    	</select>
-			</form>
+            {% for button in buttons %}
+            {{ button.html|safe }}
+            {% endfor %}
 		</div>
 		<div class="col_2_piscine">
 			<p><b>Données de la piscine</b></p>
 			<p><span class="rightfloat">Pool Temp Now : <span id="daePoolTemp"></span><span> °F</span></p>
 		</div>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid" class="ui-btn-active">Piscine</a></li>
-				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid">Autres</a></li>
-            </ul>
-        </div>
-    </div>
+    {{footer|safe}}
 </div>
 
 <!--ÉTANG-->
@@ -189,17 +119,7 @@ $(document).ready(function()
 		    </select>
 		</form>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li class="mytab"><a href="#accueil" data-role="tab" data-icon="grid">Accueil</a></li>
-                <li class="mytab"><a href="#maison" data-role="tab" data-icon="grid">Maison</a></li>
-                <li class="mytab"><a href="#garage" data-role="tab" data-icon="grid">Garage</a></li>
-				<li class="mytab"><a href="#piscine" data-role="tab" data-icon="grid">Piscine</a></li>
-				<li class="mytab"><a href="#autres" data-role="tab" data-icon="grid" class="ui-btn-active">Autres</a></li>
-            </ul>
-        </div>
-    </div>
+    {{footer|safe}}
 </div>
 
 </html>

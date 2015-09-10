@@ -6,6 +6,7 @@ from flask.ext.socketio import SocketIO, emit
 from XML import SimpleParser
 from threading import Thread
 #import Display
+import template
 import Pins
 import time
 import sys
@@ -19,39 +20,28 @@ except:
 app = Flask(__name__)
 app.debug = True
 socketio = SocketIO(app)
-thread_TED = None
-thread_DAE = None
 
-@app.route("/_poolpump")
-def _poolpump():
-    state = request.args.get('state')
-    if state=="on":
-        Pins.PoolPumpon()
-    else:
-        Pins.PoolPumpoff()
-    return jsonify(poolpumpState=state)
+pool_pump = template.Button("pool_pump", "Pompe Piscine")
+pond_pump = template.Button("pond_pump", "Pompe Etang")
+thermopompe = template.Button("thermopompe", "Thermopompe Piscine")
 
-@app.route("/_pondpump")	
-def _pondpump():
-    state = request.args.get('state')
-    if state=="on":
-        Pins.LEDon()
-    else:
-        Pins.LEDoff()
-    return ""
+socketio.on("pool_pump")(pool_pump.event)
+socketio.on("pond_pump")(pond_pump.event)
+socketio.on("thermopompe")(thermopompe.event)
 
-@app.route("/_poolpumpstatus")
-def _poolpumpstatus():
-    if Pins.ReadPoolPump():
-        state = "off"
+@app.route('/')
+def index():
+    runThreads()
+    browser = request.user_agent.browser 
+    if browser == "chrome":
+        template.ChromeBrowser()
     else:
-        state = "on"
-    return jsonify(poolpumpState=state)
-	
+        template.OtherBrowsers()
+    return render_template('index.html', **template.context)
+
 def TED_thread():
     ted = SimpleParser()
     while True:
-        #time.sleep(1)
         ted.reload()
         powernow = ted.get("Power","Total","PowerNow")/1000
         powernow = "%0.3f" % powernow
@@ -61,7 +51,7 @@ def TED_thread():
         costnow = "%0.2f" % costnow
         costtdy = ted.get("Cost","Total","CostTDY")/100
         costtdy = "%0.2f" % costtdy
- #       Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
+        #Display.ChangeDisplay(powernow, voltagenow, costnow, costtdy)
         data = dict(tedPowerState=powernow, tedVoltageState=voltagenow, tedCostState=costnow, tedCosttdyState=costtdy)
         #print "dict="+str(data)
         socketio.emit('TED', data)
@@ -76,8 +66,9 @@ def DAE_thread():
 		#print "dict="+str(data)
 		socketio.emit('DAE', data)
 
-@app.route('/')
-def index():
+thread_TED = None
+thread_DAE = None
+def runThreads():
     global thread_TED
     if thread_TED is None:
         thread_TED = Thread(target=TED_thread)
@@ -86,33 +77,7 @@ def index():
     if thread_DAE is None:
         thread_DAE = Thread(target=DAE_thread)
         thread_DAE.start()
-        
-    return render_template('index.html')
 
-@socketio.on('pool_pump')
-def pool_pump(data):
-    state = data["state"]
-    if state=="on":
-        Pins.PoolPumpOn()
-    else:
-        Pins.PoolPumpOff()
-    emit("pool_pump_status", {"state": state}, broadcast=True)
-	
-@socketio.on('pond_pump')
-def pond_pump(data):
-    state = data["state"]
-    if state=="on":
-        Pins.PondPumpOn()
-    else:
-        Pins.PondPumpOff()
-	emit("pond_pump_status", {"state": state}, broadcast=True)
-
-@socketio.on('my broadcast event')
-def test_broadcast_message(message):
-    emit('my response',
-         {'data': message['data'], 'count': 10},
-         broadcast=True)
-    
 # run the webserver, requires sudo
 if __name__ == "__main__":
     Pins.Init()
